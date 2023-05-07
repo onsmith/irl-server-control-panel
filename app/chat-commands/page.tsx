@@ -33,7 +33,7 @@ export default function ChatCommandsPage(): JSX.Element {
           <div>
             <div className="mb-2 block">
               <Label htmlFor="language">
-                Chat Language <span className="text-red-600">*</span>
+                Chat language <span className="text-red-600">*</span>
               </Label>
             </div>
             <select
@@ -55,7 +55,7 @@ export default function ChatCommandsPage(): JSX.Element {
           <div>
             <div className="mb-2 block">
               <Label htmlFor="chatUsername">
-                Twitch Username <span className="text-red-600">*</span>
+                Twitch username <span className="text-red-600">*</span>
               </Label>
             </div>
             <TextInput
@@ -65,41 +65,94 @@ export default function ChatCommandsPage(): JSX.Element {
               required
             />
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Username of the Twitch account you will stream from
+              Username of the streamer's Twitch account
             </p>
           </div>
 
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="chatAdmins">Twitch Mod Usernames</Label>
+              <Label htmlFor="chatAdmins">Twitch admin usernames</Label>
             </div>
             <TextInput
               id="chatAdmins"
               type="input"
-              placeholder="mod1, mod2"
-              required
+              placeholder="admin1, admin2"
             />
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Username of the Twitch accounts that can use commands, separated
-              by commas
+              Usernames of the Twitch accounts who should have full access to
+              all of the stream server's chat commands, separated by commas and/or spaces
             </p>
           </div>
 
           <div>
             <div className="mb-2 block">
               <Label htmlFor="chatPrefix">
-                Chat Command Prefix <span className="text-red-600">*</span>
+                Chat command prefix character <span className="text-red-600">*</span>
               </Label>
             </div>
             <TextInput
               id="chatPrefix"
               type="input"
+              defaultValue="!"
               placeholder="!"
+              minLength={1}
               maxLength={1}
               required
             />
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Prefix to use in chat to specify a command
+              Prefix character to use to specify a chat command
+            </p>
+          </div>
+
+          <div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                name="chatEnableModCommands"
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+              <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                Enable mod-only commands
+              </span>
+            </label>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Gives mods permission to use certain chat commands
+            </p>
+          </div>
+
+          <div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                name="chatEnablePublicCommands"
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+              <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                Enable public commands
+              </span>
+            </label>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Allows anyone to use the <code>!bitrate</code> chat command
+            </p>
+          </div>
+
+          <div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                name="enableAutoStopStreamOnHostOrRaid"
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+              <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                Automatic end stream on host or raid
+              </span>
+            </label>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Automatically ends the stream if the streamer initiates a raid or
+              host
             </p>
           </div>
 

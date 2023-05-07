@@ -16,7 +16,7 @@ export default function ObsScenesPage(): JSX.Element {
           <div>
             <div className="mb-2 block">
               <Label htmlFor="switchingScenesNormal">
-                Normal Bitrate Scene <span className="text-red-600">*</span>
+                Main scene name <span className="text-red-600">*</span>
               </Label>
             </div>
             <TextInput
@@ -33,7 +33,7 @@ export default function ObsScenesPage(): JSX.Element {
           <div>
             <div className="mb-2 block">
               <Label htmlFor="switchingScenesLow">
-                Low Bitrate Scene <span className="text-red-600">*</span>
+                Low bitrate scene name <span className="text-red-600">*</span>
               </Label>
             </div>
             <TextInput
@@ -50,7 +50,7 @@ export default function ObsScenesPage(): JSX.Element {
           <div>
             <div className="mb-2 block">
               <Label htmlFor="switchingScenesOffline">
-                Disconnected Bitrate Scene{" "}
+                Disconnected scene name{" "}
                 <span className="text-red-600">*</span>
               </Label>
             </div>
@@ -67,13 +67,12 @@ export default function ObsScenesPage(): JSX.Element {
 
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="optionalScenesStarting">Starting Scene</Label>
+              <Label htmlFor="optionalScenesStarting">Starting scene name</Label>
             </div>
             <TextInput
               id="optionalScenesStarting"
               type="input"
               placeholder="starting"
-              required
             />
             <p className="text-gray-600 dark:text-gray-400 text-sm">
               Name of OBS scene to switch to when the chat command{" "}
@@ -83,13 +82,12 @@ export default function ObsScenesPage(): JSX.Element {
 
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="optionalScenesEnding">Ending Scene</Label>
+              <Label htmlFor="optionalScenesEnding">Ending scene name</Label>
             </div>
             <TextInput
               id="optionalScenesEnding"
               type="input"
               placeholder="ending"
-              required
             />
             <p className="text-gray-600 dark:text-gray-400 text-sm">
               Name of OBS scene to switch to when the chat command{" "}
@@ -99,13 +97,12 @@ export default function ObsScenesPage(): JSX.Element {
 
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="optionalScenesPrivacy">Privacy Scene</Label>
+              <Label htmlFor="optionalScenesPrivacy">Privacy scene name</Label>
             </div>
             <TextInput
               id="optionalScenesPrivacy"
               type="input"
               placeholder="privacy"
-              required
             />
             <p className="text-gray-600 dark:text-gray-400 text-sm">
               Name of OBS scene to switch to when the chat command{" "}
@@ -115,13 +112,12 @@ export default function ObsScenesPage(): JSX.Element {
 
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="optionalScenesRefresh">Refresh Scene</Label>
+              <Label htmlFor="optionalScenesRefresh">Refresh scene name</Label>
             </div>
             <TextInput
               id="optionalScenesRefresh"
               type="input"
               placeholder="refresh"
-              required
             />
             <p className="text-gray-600 dark:text-gray-400 text-sm">
               Name of OBS scene to switch to when the chat command{" "}
