@@ -20,6 +20,39 @@ const languages = [
 ];
 
 export default function ChatCommandsPage(): JSX.Element {
+  // Handles the submit event on form submit.
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    // Stop the form from submitting and refreshing the page
+    event.preventDefault();
+
+    // Send the form data to our forms API on Vercel and get a response.
+    const response = await fetch("/api/noalbs/config", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        language: event.currentTarget["language"].value,
+        chat: {
+          platform: "Twitch",
+          username: event.currentTarget["chatUsername"].value,
+          admins: event.currentTarget["chatAdmins"].value.split(/\s+/),
+          prefix: event.currentTarget["chatPrefix"].value,
+          enablePublicCommands: event.currentTarget["chatEnablePublicCommands"],
+          enableModCommands: event.currentTarget["chatEnableModCommands"],
+          enableAutoStopStreamOnHostOrRaid:
+            event.currentTarget["chatEnableAutoStopStreamOnHostOrRaid"],
+          // announceRaidOnAutoStop: event.currentTarget["chatAnnounceRaidOnAutoStop"],
+        },
+      }),
+    });
+
+    // Get the response data from server as JSON
+    const result = await response.json();
+
+    // TODO use result
+  };
+
   return (
     <div className="p-6">
       <section>
@@ -29,7 +62,7 @@ export default function ChatCommandsPage(): JSX.Element {
           </h1>
         </header>
 
-        <form className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <div>
             <div className="mb-2 block">
               <Label htmlFor="language">
@@ -38,6 +71,7 @@ export default function ChatCommandsPage(): JSX.Element {
             </div>
             <select
               id="language"
+              name="language"
               className="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline"
               placeholder="Regular input"
             >
@@ -60,6 +94,7 @@ export default function ChatCommandsPage(): JSX.Element {
             </div>
             <TextInput
               id="chatUsername"
+              name="chatUsername"
               type="input"
               placeholder="Twitch username"
               required
@@ -75,23 +110,27 @@ export default function ChatCommandsPage(): JSX.Element {
             </div>
             <TextInput
               id="chatAdmins"
+              name="chatAdmins"
               type="input"
-              placeholder="admin1, admin2"
+              placeholder="admin1 admin2"
+              pattern="^\s*.+(\s+.+)*\s*$"
             />
             <p className="text-gray-600 dark:text-gray-400 text-sm">
               Usernames of the Twitch accounts who should have full access to
-              all of the stream server's chat commands, separated by commas and/or spaces
+              all of the stream server's chat commands, separated by spaces
             </p>
           </div>
 
           <div>
             <div className="mb-2 block">
               <Label htmlFor="chatPrefix">
-                Chat command prefix character <span className="text-red-600">*</span>
+                Chat command prefix character{" "}
+                <span className="text-red-600">*</span>
               </Label>
             </div>
             <TextInput
               id="chatPrefix"
+              name="chatPrefix"
               type="input"
               defaultValue="!"
               placeholder="!"
@@ -143,7 +182,7 @@ export default function ChatCommandsPage(): JSX.Element {
               <input
                 type="checkbox"
                 className="sr-only peer"
-                name="enableAutoStopStreamOnHostOrRaid"
+                name="chatEnableAutoStopStreamOnHostOrRaid"
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
               <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">

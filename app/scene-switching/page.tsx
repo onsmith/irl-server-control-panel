@@ -3,6 +3,43 @@
 import { Button, Label, TextInput } from "flowbite-react";
 
 export default function SceneSwitchingPage(): JSX.Element {
+  // Handles the submit event on form submit.
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    // Stop the form from submitting and refreshing the page
+    event.preventDefault();
+
+    // Send the form data to our forms API on Vercel and get a response.
+    const response = await fetch("/api/noalbs/config", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        switcher: {
+          bitrateSwitcherEnabled:
+            event.currentTarget["switcherBitrateSwitcherEnabled"].value,
+          onlySwitchWhenStreaming:
+            event.currentTarget["switcherOnlySwitchWhenStreaming"].value,
+          instantlySwitchOnRecover:
+            event.currentTarget["switcherInstantlySwitchOnRecover"].value,
+          retryAttempts: event.currentTarget["switcherRetryAttempts"].value,
+          autoSwitchNotification:
+            event.currentTarget["switcherAutoSwitchNotification"].value,
+          triggers: {
+            low: event.currentTarget["switcherTriggersLow"].value,
+            rtt: event.currentTarget["switcherTriggersRtt"].value,
+            offline: event.currentTarget["switcherTriggersOffline"].value,
+          },
+        },
+      }),
+    });
+
+    // Get the response data from server as JSON
+    const result = await response.json();
+
+    // TODO use result
+  };
+
   return (
     <div className="p-6">
       <section>
@@ -12,7 +49,7 @@ export default function SceneSwitchingPage(): JSX.Element {
           </h1>
         </header>
 
-        <form className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
@@ -75,7 +112,7 @@ export default function SceneSwitchingPage(): JSX.Element {
                 type="checkbox"
                 value=""
                 className="sr-only peer"
-                name="instantlySwitchOnRecover"
+                name="switcherInstantlySwitchOnRecover"
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
               <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -83,8 +120,8 @@ export default function SceneSwitchingPage(): JSX.Element {
               </span>
             </label>
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Skip <em>retry attempts</em> and instantly switch back to the
-              normal OBS scene on stream recovery
+              Skip any <em>retry attempts</em> and immediately switch back to
+              the normal OBS scene on stream recovery
             </p>
           </div>
 
@@ -94,7 +131,7 @@ export default function SceneSwitchingPage(): JSX.Element {
                 type="checkbox"
                 value=""
                 className="sr-only peer"
-                name="autoSwitchNotification"
+                name="switcherAutoSwitchNotification"
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
               <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">

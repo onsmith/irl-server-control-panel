@@ -1,8 +1,41 @@
 "use client";
 
 import { Button, Label, TextInput } from "flowbite-react";
+import React from "react";
 
 export default function ObsScenesPage(): JSX.Element {
+  // Handles the submit event on form submit.
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    // Stop the form from submitting and refreshing the page
+    event.preventDefault();
+
+    // Send the form data to our forms API on Vercel and get a response.
+    const response = await fetch("/api/noalbs/config", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        switchingScenes: {
+          normal: event.currentTarget["switchingScenesNormal"].value,
+          low: event.currentTarget["switchingScenesLow"].value,
+          offline: event.currentTarget["switchingScenesOffline"].value,
+        },
+        optionalScenes: {
+          starting: event.currentTarget["optionalScenesStarting"].value,
+          ending: event.currentTarget["optionalScenesEnding"].value,
+          privacy: event.currentTarget["optionalScenesPrivacy"].value,
+          refresh: event.currentTarget["optionalScenesRefresh"].value,
+        },
+      }),
+    });
+
+    // Get the response data from server as JSON
+    const result = await response.json();
+
+    // TODO use result
+  };
+
   return (
     <div className="p-6">
       <section>
@@ -12,7 +45,7 @@ export default function ObsScenesPage(): JSX.Element {
           </h1>
         </header>
 
-        <form className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <div>
             <div className="mb-2 block">
               <Label htmlFor="switchingScenesNormal">
@@ -21,6 +54,7 @@ export default function ObsScenesPage(): JSX.Element {
             </div>
             <TextInput
               id="switchingScenesNormal"
+              name="switchingScenesNormal"
               type="input"
               placeholder="live"
               required
@@ -38,6 +72,7 @@ export default function ObsScenesPage(): JSX.Element {
             </div>
             <TextInput
               id="switchingScenesLow"
+              name="switchingScenesLow"
               type="input"
               placeholder="low"
               required
@@ -50,12 +85,12 @@ export default function ObsScenesPage(): JSX.Element {
           <div>
             <div className="mb-2 block">
               <Label htmlFor="switchingScenesOffline">
-                Disconnected scene name{" "}
-                <span className="text-red-600">*</span>
+                Disconnected scene name <span className="text-red-600">*</span>
               </Label>
             </div>
             <TextInput
               id="switchingScenesOffline"
+              name="switchingScenesOffline"
               type="input"
               placeholder="disconnected"
               required
@@ -67,10 +102,13 @@ export default function ObsScenesPage(): JSX.Element {
 
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="optionalScenesStarting">Starting scene name</Label>
+              <Label htmlFor="optionalScenesStarting">
+                Starting scene name
+              </Label>
             </div>
             <TextInput
               id="optionalScenesStarting"
+              name="optionalScenesStarting"
               type="input"
               placeholder="starting"
             />
@@ -86,6 +124,7 @@ export default function ObsScenesPage(): JSX.Element {
             </div>
             <TextInput
               id="optionalScenesEnding"
+              name="optionalScenesEnding"
               type="input"
               placeholder="ending"
             />
@@ -101,6 +140,7 @@ export default function ObsScenesPage(): JSX.Element {
             </div>
             <TextInput
               id="optionalScenesPrivacy"
+              name="optionalScenesPrivacy"
               type="input"
               placeholder="privacy"
             />
@@ -116,6 +156,7 @@ export default function ObsScenesPage(): JSX.Element {
             </div>
             <TextInput
               id="optionalScenesRefresh"
+              name="optionalScenesRefresh"
               type="input"
               placeholder="refresh"
             />
