@@ -1,37 +1,28 @@
 "use client";
 
 import { Button, Label, TextInput } from "flowbite-react";
-import React from "react";
+import { useForm } from "react-hook-form";
+import InputHelpText, {
+  inputStatusColor,
+} from "../../components/input-help-text";
 
 export default function ObsScenesPage(): JSX.Element {
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
   // Handles the submit event on form submit.
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    // Stop the form from submitting and refreshing the page
-    event.preventDefault();
 
-    // Send the form data to our forms API on Vercel and get a response.
-    const response = await fetch("/api/noalbs/config", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        switchingScenes: {
-          normal: event.currentTarget["switchingScenesNormal"].value,
-          low: event.currentTarget["switchingScenesLow"].value,
-          offline: event.currentTarget["switchingScenesOffline"].value,
-        },
-        optionalScenes: {
-          starting: event.currentTarget["optionalScenesStarting"].value,
-          ending: event.currentTarget["optionalScenesEnding"].value,
-          privacy: event.currentTarget["optionalScenesPrivacy"].value,
-          refresh: event.currentTarget["optionalScenesRefresh"].value,
-        },
-      }),
-    });
-
-    // Get the response data from server as JSON
-    const result = await response.json();
+  const updateConfig = (data: any) => {
+    alert(JSON.stringify(data));
+    // const response = fetch("/api/noalbs/config", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(data),
+    // });
 
     // TODO use result
   };
@@ -45,7 +36,10 @@ export default function ObsScenesPage(): JSX.Element {
           </h1>
         </header>
 
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        <form
+          className="flex flex-col gap-4"
+          onSubmit={handleSubmit(updateConfig)}
+        >
           <div>
             <div className="mb-2 block">
               <Label htmlFor="switchingScenesNormal">
@@ -54,14 +48,22 @@ export default function ObsScenesPage(): JSX.Element {
             </div>
             <TextInput
               id="switchingScenesNormal"
-              name="switchingScenesNormal"
+              {...register("switcher.switchingScenes.normal", {
+                required: true,
+              })}
               type="input"
               placeholder="live"
-              required
+              color={inputStatusColor(
+                errors,
+                "switcher.switchingScenes.normal"
+              )}
             />
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
+            <InputHelpText
+              errors={errors}
+              name="switcher.switchingScenes.normal"
+            >
               Name of OBS scene to switch to if the bitrate is normal
-            </p>
+            </InputHelpText>
           </div>
 
           <div>
@@ -72,14 +74,14 @@ export default function ObsScenesPage(): JSX.Element {
             </div>
             <TextInput
               id="switchingScenesLow"
-              name="switchingScenesLow"
+              {...register("switcher.switchingScenes.low", { required: true })}
               type="input"
               placeholder="low"
-              required
+              color={inputStatusColor(errors, "switcher.switchingScenes.low")}
             />
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
+            <InputHelpText errors={errors} name="switcher.switchingScenes.low">
               Name of OBS scene to switch to if the bitrate is low
-            </p>
+            </InputHelpText>
           </div>
 
           <div>
@@ -90,14 +92,22 @@ export default function ObsScenesPage(): JSX.Element {
             </div>
             <TextInput
               id="switchingScenesOffline"
-              name="switchingScenesOffline"
+              {...register("switcher.switchingScenes.offline", {
+                required: true,
+              })}
               type="input"
               placeholder="disconnected"
-              required
+              color={inputStatusColor(
+                errors,
+                "switcher.switchingScenes.offline"
+              )}
             />
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
+            <InputHelpText
+              errors={errors}
+              name="switcher.switchingScenes.offline"
+            >
               Name of OBS scene to switch to if the connection drops
-            </p>
+            </InputHelpText>
           </div>
 
           <div>
@@ -108,7 +118,7 @@ export default function ObsScenesPage(): JSX.Element {
             </div>
             <TextInput
               id="optionalScenesStarting"
-              name="optionalScenesStarting"
+              {...register("optionalScenes.starting")}
               type="input"
               placeholder="starting"
             />
@@ -124,7 +134,7 @@ export default function ObsScenesPage(): JSX.Element {
             </div>
             <TextInput
               id="optionalScenesEnding"
-              name="optionalScenesEnding"
+              {...register("optionalScenes.ending")}
               type="input"
               placeholder="ending"
             />
@@ -140,7 +150,7 @@ export default function ObsScenesPage(): JSX.Element {
             </div>
             <TextInput
               id="optionalScenesPrivacy"
-              name="optionalScenesPrivacy"
+              {...register("optionalScenes.privacy")}
               type="input"
               placeholder="privacy"
             />
@@ -156,7 +166,7 @@ export default function ObsScenesPage(): JSX.Element {
             </div>
             <TextInput
               id="optionalScenesRefresh"
-              name="optionalScenesRefresh"
+              {...register("optionalScenes.refresh")}
               type="input"
               placeholder="refresh"
             />

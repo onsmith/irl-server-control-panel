@@ -1,41 +1,28 @@
 "use client";
 
 import { Button, Label, TextInput } from "flowbite-react";
+import { useForm } from "react-hook-form";
+import InputHelpText, {
+  inputStatusColor,
+} from "../../components/input-help-text";
 
 export default function SceneSwitchingPage(): JSX.Element {
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
   // Handles the submit event on form submit.
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    // Stop the form from submitting and refreshing the page
-    event.preventDefault();
 
-    // Send the form data to our forms API on Vercel and get a response.
-    const response = await fetch("/api/noalbs/config", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        switcher: {
-          bitrateSwitcherEnabled:
-            event.currentTarget["switcherBitrateSwitcherEnabled"].value,
-          onlySwitchWhenStreaming:
-            event.currentTarget["switcherOnlySwitchWhenStreaming"].value,
-          instantlySwitchOnRecover:
-            event.currentTarget["switcherInstantlySwitchOnRecover"].value,
-          retryAttempts: event.currentTarget["switcherRetryAttempts"].value,
-          autoSwitchNotification:
-            event.currentTarget["switcherAutoSwitchNotification"].value,
-          triggers: {
-            low: event.currentTarget["switcherTriggersLow"].value,
-            rtt: event.currentTarget["switcherTriggersRtt"].value,
-            offline: event.currentTarget["switcherTriggersOffline"].value,
-          },
-        },
-      }),
-    });
-
-    // Get the response data from server as JSON
-    const result = await response.json();
+  const updateConfig = (data: any) => {
+    alert(JSON.stringify(data));
+    // const response = fetch("/api/noalbs/config", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(data),
+    // });
 
     // TODO use result
   };
@@ -49,14 +36,16 @@ export default function SceneSwitchingPage(): JSX.Element {
           </h1>
         </header>
 
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        <form
+          className="flex flex-col gap-4"
+          onSubmit={handleSubmit(updateConfig)}
+        >
           <div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
-                value=""
+                {...register("switcher.bitrateSwitcherEnabled")}
                 className="sr-only peer"
-                name="switcherBitrateSwitcherEnabled"
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
               <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -73,9 +62,8 @@ export default function SceneSwitchingPage(): JSX.Element {
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
-                value=""
+                {...register("switcher.onlySwitchWhenStreaming")}
                 className="sr-only peer"
-                name="switcherOnlySwitchWhenStreaming"
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
               <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -96,23 +84,25 @@ export default function SceneSwitchingPage(): JSX.Element {
             <TextInput
               id="switcherRetryAttempts"
               type="number"
-              min={1}
+              {...register("switcher.retryAttempts", {
+                required: true,
+                min: 1,
+              })}
+              color={inputStatusColor(errors, "switcher.retryAttempts")}
               defaultValue={5}
-              required
             />
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
+            <InputHelpText errors={errors} name="switcher.retryAttempts">
               Number of times the stream bitrate will be checked before
               switching scenes
-            </p>
+            </InputHelpText>
           </div>
 
           <div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
-                value=""
+                {...register("switcher.instantlySwitchOnRecover")}
                 className="sr-only peer"
-                name="switcherInstantlySwitchOnRecover"
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
               <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -129,9 +119,8 @@ export default function SceneSwitchingPage(): JSX.Element {
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
-                value=""
+                {...register("switcher.autoSwitchNotification")}
                 className="sr-only peer"
-                name="switcherAutoSwitchNotification"
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
               <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -152,14 +141,17 @@ export default function SceneSwitchingPage(): JSX.Element {
             <TextInput
               id="switcherTriggersLow"
               type="number"
-              min={1}
+              {...register("switcher.triggers.low", {
+                required: true,
+                min: 1,
+              })}
+              color={inputStatusColor(errors, "switcher.triggers.low")}
               defaultValue={800}
-              required
             />
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
+            <InputHelpText errors={errors} name="switcher.triggers.low">
               If the bitrate is detected to be below this value in kbps, the
               "low bitrate" scene will be made active
-            </p>
+            </InputHelpText>
           </div>
 
           <div>
@@ -172,14 +164,17 @@ export default function SceneSwitchingPage(): JSX.Element {
             <TextInput
               id="switcherTriggersRtt"
               type="number"
-              min={1}
+              {...register("switcher.triggers.rtt", {
+                required: true,
+                min: 1,
+              })}
+              color={inputStatusColor(errors, "switcher.triggers.rtt")}
               defaultValue={2500}
-              required
             />
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
+            <InputHelpText errors={errors} name="switcher.triggers.rtt">
               If the round-trip time is detected to exceed this value in
               milliseconds, the "disconnected" scene will be made active
-            </p>
+            </InputHelpText>
           </div>
 
           <div>
@@ -191,13 +186,14 @@ export default function SceneSwitchingPage(): JSX.Element {
             <TextInput
               id="switcherTriggersOffline"
               type="number"
-              min={1}
+              {...register("switcher.triggers.offline", { min: 1 })}
+              color={inputStatusColor(errors, "switcher.triggers.offline")}
               placeholder="null"
             />
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
+            <InputHelpText errors={errors} name="switcher.triggers.offline">
               If the bitrate is detected to be below this value in kbps, the
               "disconnected" scene will be made active
-            </p>
+            </InputHelpText>
           </div>
 
           <div>

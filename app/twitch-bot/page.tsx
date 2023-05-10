@@ -1,27 +1,27 @@
 "use client";
 
 import { Button, Label, TextInput } from "flowbite-react";
+import { useForm } from "react-hook-form";
+import InputHelpText, {
+  inputStatusColor,
+} from "../../components/input-help-text";
 
 export default function TwitchBotPage(): JSX.Element {
-  // Handles the submit event on form submit.
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    // Stop the form from submitting and refreshing the page
-    event.preventDefault();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
 
-    // Send the form data to our forms API on Vercel and get a response.
-    const response = await fetch("/api/noalbs/env", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        chatUsername: event.currentTarget["authenticationUsername"].value,
-        chatOauth: event.currentTarget["authenticationOauth"].value,
-      }),
-    });
-
-    // Get the response data from server as JSON
-    const result = await response.json();
+  const updateConfig = (data: any) => {
+    alert(JSON.stringify(data));
+    // const response = fetch("/api/noalbs/config", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(data),
+    // });
 
     // TODO use result
   };
@@ -35,7 +35,10 @@ export default function TwitchBotPage(): JSX.Element {
           </h1>
         </header>
 
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        <form
+          className="flex flex-col gap-4"
+          onSubmit={handleSubmit(updateConfig)}
+        >
           <div>
             <div className="mb-2 block">
               <Label htmlFor="authenticationUsername">
@@ -44,14 +47,14 @@ export default function TwitchBotPage(): JSX.Element {
             </div>
             <TextInput
               id="authenticationUsername"
-              name="authenticationUsername"
+              {...register("TWITCH_BOT_USERNAME", { required: true })}
+              color={inputStatusColor(errors, "TWITCH_BOT_USERNAME")}
               type="input"
               placeholder="Twitch bot username"
-              required
             />
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
+            <InputHelpText errors={errors} name="TWITCH_BOT_USERNAME">
               The username of your Twitch bot or main account
-            </p>
+            </InputHelpText>
           </div>
 
           <div>
@@ -62,14 +65,17 @@ export default function TwitchBotPage(): JSX.Element {
             </div>
             <TextInput
               id="authenticationOauth"
-              name="authenticationOauth"
+              {...register("TWITCH_BOT_OAUTH", {
+                required: true,
+                pattern: /^oauth:.+$/,
+              })}
+              color={inputStatusColor(errors, "TWITCH_BOT_OAUTH")}
               type="password"
               placeholder="oauth:xxxxxxxxxxxxxxxx"
-              required
             />
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
+            <InputHelpText errors={errors} name="TWITCH_BOT_OAUTH">
               The OAuth token for your Twitch bot or main account
-            </p>
+            </InputHelpText>
           </div>
 
           <div>
