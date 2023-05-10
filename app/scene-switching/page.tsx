@@ -1,6 +1,8 @@
 "use client";
 
+import axios from "axios";
 import { Button, Label, TextInput } from "flowbite-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import InputHelpText, {
   inputStatusColor,
@@ -10,21 +12,46 @@ export default function SceneSwitchingPage(): JSX.Element {
   const {
     handleSubmit,
     register,
-    formState: { errors },
+    formState: { errors, isSubmitting, isDirty, isSubmitSuccessful },
+    reset,
   } = useForm();
-  // Handles the submit event on form submit.
 
-  const updateConfig = (data: any) => {
-    alert(JSON.stringify(data));
-    // const response = fetch("/api/noalbs/config", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(data),
-    // });
+  // user state for form
+  const [config, setConfig] = useState(null);
 
-    // TODO use result
+  // Fetch config object from server on component load
+  useEffect(() => {
+    let isLoaded = true;
+    axios({
+      url: "/api/noalbs/config",
+      method: "GET",
+    }).then((response) => {
+      if (isLoaded) {
+        setConfig(response.data);
+      }
+    });
+    return () => {
+      isLoaded = false;
+    };
+  }, []);
+
+  // Reset form when config object is updated
+  useEffect(() => {
+    reset(config!, { keepDirty: false });
+  }, [config]);
+
+  const updateConfig = async (data: any) => {
+    return axios({
+      url: "/api/noalbs/config",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify(data),
+    }).then((response) => {
+      // TODO abort if component is unmounted
+      setConfig(response.data);
+    });
   };
 
   return (
@@ -67,7 +94,7 @@ export default function SceneSwitchingPage(): JSX.Element {
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
               <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                Only switch scenes when live
+                Only auto switch scenes when live
               </span>
             </label>
             <p className="text-gray-600 dark:text-gray-400 text-sm">
@@ -183,12 +210,13 @@ export default function SceneSwitchingPage(): JSX.Element {
                 Disconnected bitrate threshold
               </Label>
             </div>
+
             <TextInput
               id="switcherTriggersOffline"
               type="number"
               {...register("switcher.triggers.offline", { min: 1 })}
               color={inputStatusColor(errors, "switcher.triggers.offline")}
-              placeholder="null"
+              placeholder="None"
             />
             <InputHelpText errors={errors} name="switcher.triggers.offline">
               If the bitrate is detected to be below this value in kbps, the
@@ -197,7 +225,20 @@ export default function SceneSwitchingPage(): JSX.Element {
           </div>
 
           <div>
-            <Button type="submit">Save</Button>
+            <Button
+              type="submit"
+              disabled={isSubmitting || !isDirty}
+              className="btn btn-primary mr-1"
+            >
+              {isSubmitting && (
+                <span className="spinner-border spinner-border-sm mr-1"></span>
+              )}
+              {isSubmitting
+                ? "Saving"
+                : isSubmitSuccessful || !isDirty
+                ? "Saved"
+                : "Save"}
+            </Button>
           </div>
         </form>
       </section>

@@ -1,6 +1,11 @@
 import fs from "fs/promises";
 import { merge } from "lodash";
 import { NextApiRequest, NextApiResponse } from "next";
+import path from "path";
+import defaultConfig from "./default";
+
+const NOALBS_CONFIG_FILE = process.env.NOALBS_CONFIG_FILE!;
+const NOALBS_CONFIG_DIR = path.dirname(NOALBS_CONFIG_FILE);
 
 export default async function handler(
   request: NextApiRequest,
@@ -16,33 +21,42 @@ export default async function handler(
 }
 
 async function get_config(response: NextApiResponse) {
-  const rawData = await fs.readFile(process.env.NOALBS_CONFIG_FILE!);
-  const parsedData = JSON.parse(rawData.toString("utf8"));
-  response.status(200).json(parsedData);
+  response.status(200).json(await loadServerConfig());
 }
 
 async function update_config(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  // Config specified by request
-  const rawRequestConfig = request.body;
-  const parsedRequestConfig = JSON.parse(rawRequestConfig);
+  // Load the config specified in the request body
+  const requestConfig = request.body;
   // TODO validate
 
-  // Config existing on server
-  const rawServerConfig = await fs.readFile(process.env.NOALBS_CONFIG_FILE!);
-  const parsedServerConfig = JSON.parse(rawServerConfig.toString("utf8"));
+  // Load the config that exists on the server, or the default if none exists
+  let serverConfig = await loadServerConfig();
 
   // Merge the config objects
-  const mergedConfig = merge({}, parsedServerConfig, parsedRequestConfig);
+  const mergedConfig = merge({}, serverConfig, requestConfig);
 
-  // Overwrite the server config with the merged data
-  await fs.writeFile(
-    process.env.NOALBS_CONFIG_FILE!,
-    JSON.stringify(mergedConfig)
-  );
+  // Ensure the config path exists
+  // Throws an error if the server process does not have permission to create
+  // the directory
+  await fs.mkdir(NOALBS_CONFIG_DIR, { recursive: true });
 
-  // Return the merged config
+  // Overwrite the server config file with the merged data
+  // Throws an error if the server process does not have permission to write to
+  // the file
+  await fs.writeFile(NOALBS_CONFIG_FILE, JSON.stringify(mergedConfig));
+
+  // Respond with the merged data
   response.status(200).json(mergedConfig);
+}
+
+async function loadServerConfig() {
+  try {
+    return JSON.parse((await fs.readFile(NOALBS_CONFIG_FILE)).toString("utf8"));
+  } catch (_: any) {
+    // If no server config exists, return the default config
+    return defaultConfig;
+  }
 }

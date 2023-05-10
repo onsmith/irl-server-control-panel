@@ -1,6 +1,8 @@
 "use client";
 
-import { Button, Label, TextInput } from "flowbite-react";
+import axios from "axios";
+import { Button, Label, Select, TextInput } from "flowbite-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import InputHelpText, {
   inputStatusColor,
@@ -27,24 +29,44 @@ export default function ChatCommandsPage(): JSX.Element {
   const {
     handleSubmit,
     register,
-    formState: { errors },
-  } = useForm();
-  // Handles the submit event on form submit.
+    formState: { errors, isSubmitting, isDirty, isSubmitSuccessful },
+    reset,
+  } = useForm(); // user state for form
+  const [config, setConfig] = useState(null);
 
-  const updateConfig = (data: any) => {
-    data.chat.admins = data.chat.admins.trim();
-    data.chat.admins =
-      data.chat.admins.length > 0 ? data.chat.admins.split(/\s+/g) : [];
-    alert(JSON.stringify(data));
-    // const response = fetch("/api/noalbs/config", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(data),
-    // });
+  // Fetch config object from server on component load
+  useEffect(() => {
+    let isLoaded = true;
+    axios({
+      url: "/api/noalbs/config",
+      method: "GET",
+    }).then((response) => {
+      if (isLoaded) {
+        setConfig(response.data);
+      }
+    });
+    return () => {
+      isLoaded = false;
+    };
+  }, []);
 
-    // TODO use result
+  // Reset form when config object is updated
+  useEffect(() => {
+    reset(config!, { keepDirty: false });
+  }, [config]);
+
+  const updateConfig = async (data: any) => {
+    return axios({
+      url: "/api/noalbs/config",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify(data),
+    }).then((response) => {
+      // TODO abort if component is unmounted
+      setConfig(response.data);
+    });
   };
 
   return (
@@ -66,16 +88,13 @@ export default function ChatCommandsPage(): JSX.Element {
                 Chat language <span className="text-red-600">*</span>
               </Label>
             </div>
-            <select
-              {...register("language", { required: true })}
-              className="w-full h-10 pl-3 pr-6 text-base border bg-gray-50 dark:bg-gray-700 dark:text-white rounded-lg appearance-none focus:shadow-outline"
-            >
+            <Select {...register("language", { required: true })}>
               {languages.map((language) => (
                 <option key={language} value={language}>
                   {language}
                 </option>
               ))}
-            </select>
+            </Select>
             <p className="text-gray-600 dark:text-gray-400 text-sm">
               The selected language will be used by the Twitch chat bot
             </p>
@@ -194,7 +213,20 @@ export default function ChatCommandsPage(): JSX.Element {
           </div>
 
           <div>
-            <Button type="submit">Save</Button>
+            <Button
+              type="submit"
+              disabled={isSubmitting || !isDirty}
+              className="btn btn-primary mr-1"
+            >
+              {isSubmitting && (
+                <span className="spinner-border spinner-border-sm mr-1"></span>
+              )}
+              {isSubmitting
+                ? "Saving"
+                : isSubmitSuccessful || !isDirty
+                ? "Saved"
+                : "Save"}
+            </Button>
           </div>
         </form>
       </section>
