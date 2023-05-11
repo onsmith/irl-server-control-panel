@@ -114,6 +114,7 @@ export default function SceneSwitchingPage(): JSX.Element {
               {...register("switcher.retryAttempts", {
                 required: true,
                 min: 1,
+                valueAsNumber: true,
               })}
               color={inputStatusColor(errors, "switcher.retryAttempts")}
               defaultValue={5}
@@ -171,6 +172,7 @@ export default function SceneSwitchingPage(): JSX.Element {
               {...register("switcher.triggers.low", {
                 required: true,
                 min: 1,
+                valueAsNumber: true,
               })}
               color={inputStatusColor(errors, "switcher.triggers.low")}
               defaultValue={800}
@@ -194,6 +196,7 @@ export default function SceneSwitchingPage(): JSX.Element {
               {...register("switcher.triggers.rtt", {
                 required: true,
                 min: 1,
+                valueAsNumber: true,
               })}
               color={inputStatusColor(errors, "switcher.triggers.rtt")}
               defaultValue={2500}
@@ -214,7 +217,10 @@ export default function SceneSwitchingPage(): JSX.Element {
             <TextInput
               id="switcherTriggersOffline"
               type="number"
-              {...register("switcher.triggers.offline", { min: 1 })}
+              {...register("switcher.triggers.offline", {
+                min: 1,
+                valueAsNumber: true,
+              })}
               color={inputStatusColor(errors, "switcher.triggers.offline")}
               placeholder="None"
             />

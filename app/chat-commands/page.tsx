@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import InputHelpText, {
   inputStatusColor,
 } from "../../components/input-help-text";
+import ChatCommandTable from "./table";
 
 const languages = [
   "de",
@@ -42,6 +43,7 @@ export default function ChatCommandsPage(): JSX.Element {
       method: "GET",
     }).then((response) => {
       if (isLoaded) {
+        response.data.chat.admins = response.data.chat.admins.join(" ");
         setConfig(response.data);
       }
     });
@@ -56,6 +58,7 @@ export default function ChatCommandsPage(): JSX.Element {
   }, [config]);
 
   const updateConfig = async (data: any) => {
+    data.chat.admins = data.chat.admins.trim().split(/\s+/);
     return axios({
       url: "/api/noalbs/config",
       method: "POST",
@@ -65,6 +68,7 @@ export default function ChatCommandsPage(): JSX.Element {
       data: JSON.stringify(data),
     }).then((response) => {
       // TODO abort if component is unmounted
+      response.data.chat.admins = response.data.chat.admins.join(" ");
       setConfig(response.data);
     });
   };
@@ -229,6 +233,13 @@ export default function ChatCommandsPage(): JSX.Element {
             </Button>
           </div>
         </form>
+
+        <div className="mt-8 mb-4">
+          <h2 className="mb-6 text-2xl font-extrabold dark:text-white">
+            Available Commands
+          </h2>
+          <ChatCommandTable />
+        </div>
       </section>
     </div>
   );
