@@ -55,18 +55,15 @@ export default function SceneSwitchingPage(): JSX.Element {
   };
 
   return (
-    <div className="p-6">
+    <form onSubmit={handleSubmit(updateConfig)}>
       <section>
         <header>
-          <h1 className="mb-6 text-4xl font-extrabold dark:text-white">
+          <h2 className="mb-6 text-4xl font-bold dark:text-white">
             Scene Switching
-          </h1>
+          </h2>
         </header>
 
-        <form
-          className="flex flex-col gap-4"
-          onSubmit={handleSubmit(updateConfig)}
-        >
+        <div className="flex flex-col gap-4">
           <div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
@@ -81,7 +78,7 @@ export default function SceneSwitchingPage(): JSX.Element {
             </label>
             <p className="text-gray-600 dark:text-gray-400 text-sm">
               Automatically switch the active OBS scene based on the current
-              bitrate
+              bitrate and latency
             </p>
           </div>
 
@@ -94,7 +91,7 @@ export default function SceneSwitchingPage(): JSX.Element {
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
               <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                Only auto switch scenes when live
+                Only automatically switch scenes when live
               </span>
             </label>
             <p className="text-gray-600 dark:text-gray-400 text-sm">
@@ -104,12 +101,12 @@ export default function SceneSwitchingPage(): JSX.Element {
 
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="switcherRetryAttempts">
-                Retry attempts <span className="text-red-600">*</span>
+              <Label htmlFor="switcher.retryAttempts">
+                Scene switch delay <span className="text-red-600">*</span>
               </Label>
             </div>
             <TextInput
-              id="switcherRetryAttempts"
+              id="switcher.retryAttempts"
               type="number"
               {...register("switcher.retryAttempts", {
                 required: true,
@@ -117,11 +114,10 @@ export default function SceneSwitchingPage(): JSX.Element {
                 valueAsNumber: true,
               })}
               color={inputStatusColor(errors, "switcher.retryAttempts")}
-              defaultValue={5}
             />
             <InputHelpText errors={errors} name="switcher.retryAttempts">
-              Number of times the stream bitrate will be checked before
-              switching scenes
+              Number of seconds after a network change the stream should be
+              monitored before the scene is switched
             </InputHelpText>
           </div>
 
@@ -134,12 +130,12 @@ export default function SceneSwitchingPage(): JSX.Element {
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
               <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                Instantly switch scenes on stream recovery
+                Recover stream immediately
               </span>
             </label>
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Skip any <em>retry attempts</em> and immediately switch back to
-              the normal OBS scene on stream recovery
+              Skip the <em>scene switch delay</em> when the network is improving
+              and switch back immediately to the good connection scene
             </p>
           </div>
 
@@ -152,25 +148,62 @@ export default function SceneSwitchingPage(): JSX.Element {
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
               <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                Send chat notification when switching scenes
+                Post a notification in chat when switching scenes
               </span>
             </label>
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Post a message in chat whenever switching scenes automatically
+              Post a message in chat whenever the scene is switched
+              automatically
             </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="pt-6">
+        <header>
+          <h2 className="mb-3 text-2xl font-bold dark:text-white">
+            Good connection
+          </h2>
+        </header>
+
+        <div className="flex flex-col gap-4">
+          <div>
+            <div className="mb-2 block">
+              <Label htmlFor="switcher.switchingScenes.normal">
+                Scene name <span className="text-red-600">*</span>
+              </Label>
+            </div>
+            <TextInput
+              id="switcher.switchingScenes.normal"
+              {...register("switcher.switchingScenes.normal", {
+                required: true,
+              })}
+              type="input"
+              placeholder="live"
+              color={inputStatusColor(
+                errors,
+                "switcher.switchingScenes.normal"
+              )}
+            />
+            <InputHelpText
+              errors={errors}
+              name="switcher.switchingScenes.normal"
+            >
+              Name of the "good connection" scene, to be shown if the connection
+              to the encoder is good
+            </InputHelpText>
           </div>
 
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="switcherTriggersLow">
-                Low bitrate threshold <span className="text-red-600">*</span>
+              <Label htmlFor="switcher.triggers.low">
+                Minimum bitrate
               </Label>
             </div>
             <TextInput
-              id="switcherTriggersLow"
+              id="switcher.triggers.low"
               type="number"
               {...register("switcher.triggers.low", {
-                required: true,
                 min: 1,
                 valueAsNumber: true,
               })}
@@ -178,23 +211,21 @@ export default function SceneSwitchingPage(): JSX.Element {
               defaultValue={800}
             />
             <InputHelpText errors={errors} name="switcher.triggers.low">
-              If the bitrate is detected to be below this value in kbps, the
-              "low bitrate" scene will be made active
+              If the bitrate of the connection to the encoder is below this
+              value in kbps, OBS will be switched out of this scene
             </InputHelpText>
           </div>
 
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="switcherTriggersRtt">
-                Disconnected RTT threshold{" "}
-                <span className="text-red-600">*</span>
+              <Label htmlFor="switcher.triggers.rtt">
+                Minimum latency
               </Label>
             </div>
             <TextInput
-              id="switcherTriggersRtt"
+              id="switcher.triggers.rtt"
               type="number"
               {...register("switcher.triggers.rtt", {
-                required: true,
                 min: 1,
                 valueAsNumber: true,
               })}
@@ -202,20 +233,51 @@ export default function SceneSwitchingPage(): JSX.Element {
               defaultValue={2500}
             />
             <InputHelpText errors={errors} name="switcher.triggers.rtt">
-              If the round-trip time is detected to exceed this value in
-              milliseconds, the "disconnected" scene will be made active
+              If the latency (round-trip time) to the encoder exceeds this value
+              in milliseconds, OBS will be switched out of this scene
+            </InputHelpText>
+          </div>
+        </div>
+      </section>
+
+      <section className="pt-6">
+        <header>
+          <h2 className="mb-3 text-2xl font-bold dark:text-white">
+            Low connection
+          </h2>
+        </header>
+
+        <div className="flex flex-col gap-4">
+          <div>
+            <div className="mb-2 block">
+              <Label htmlFor="switcher.switchingScenes.low">
+                Scene name <span className="text-red-600">*</span>
+              </Label>
+            </div>
+            <TextInput
+              id="switcher.switchingScenes.low"
+              {...register("switcher.switchingScenes.low", {
+                required: true,
+              })}
+              type="input"
+              placeholder="low"
+              color={inputStatusColor(errors, "switcher.switchingScenes.low")}
+            />
+            <InputHelpText errors={errors} name="switcher.switchingScenes.low">
+              Name of the "low connection" scene, to be shown if the connection
+              to the encoder is weak
             </InputHelpText>
           </div>
 
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="switcherTriggersOffline">
-                Disconnected bitrate threshold
+              <Label htmlFor="switcher.triggers.offline">
+                Minimum bitrate
               </Label>
             </div>
 
             <TextInput
-              id="switcherTriggersOffline"
+              id="switcher.triggers.offline"
               type="number"
               {...register("switcher.triggers.offline", {
                 min: 1,
@@ -225,8 +287,67 @@ export default function SceneSwitchingPage(): JSX.Element {
               placeholder="None"
             />
             <InputHelpText errors={errors} name="switcher.triggers.offline">
-              If the bitrate is detected to be below this value in kbps, the
-              "disconnected" scene will be made active
+              If the bitrate of the connection to the encoder is below this
+              value in kbps, OBS will be switched out of this scene
+            </InputHelpText>
+          </div>
+
+          <div>
+            <div className="mb-2 block">
+              <Label htmlFor="switcher.triggers.rtt_offline">
+                Minimum latency
+              </Label>
+            </div>
+            <TextInput
+              id="switcher.triggers.rtt_offline"
+              type="number"
+              {...register("switcher.triggers.rtt_offline", {
+                min: 1,
+                valueAsNumber: true,
+              })}
+              color={inputStatusColor(errors, "switcher.triggers.rtt_offline")}
+              defaultValue={2500}
+            />
+            <InputHelpText errors={errors} name="switcher.triggers.rtt_offline">
+              If the latency (round-trip time) to the encoder exceeds this value
+              in milliseconds, OBS will be switched out of this scene
+            </InputHelpText>
+          </div>
+        </div>
+      </section>
+
+      <section className="pt-6">
+        <header>
+          <h2 className="mb-3 text-2xl font-bold dark:text-white">
+            Disconnected
+          </h2>
+        </header>
+
+        <div className="flex flex-col gap-4">
+          <div>
+            <div className="mb-2 block">
+              <Label htmlFor="switcher.switchingScenes.offline">
+                Scene name <span className="text-red-600">*</span>
+              </Label>
+            </div>
+            <TextInput
+              id="switcher.switchingScenes.offline"
+              {...register("switcher.switchingScenes.offline", {
+                required: true,
+              })}
+              type="input"
+              placeholder="disconnected"
+              color={inputStatusColor(
+                errors,
+                "switcher.switchingScenes.offline"
+              )}
+            />
+            <InputHelpText
+              errors={errors}
+              name="switcher.switchingScenes.offline"
+            >
+              Name of the "disconnected" scene, to be shown if the connection to
+              the encoder drops
             </InputHelpText>
           </div>
 
@@ -246,8 +367,8 @@ export default function SceneSwitchingPage(): JSX.Element {
                 : "Save"}
             </Button>
           </div>
-        </form>
+        </div>
       </section>
-    </div>
+    </form>
   );
 }
