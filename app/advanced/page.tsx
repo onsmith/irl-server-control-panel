@@ -69,12 +69,12 @@ export default function AdvancedPage(): JSX.Element {
         >
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="ingestKey">
+              <Label htmlFor="switcher.streamServers.0.streamServer.publisher">
                 Ingest Key <span className="text-red-600">*</span>
               </Label>
             </div>
             <TextInput
-              id="ingestKey"
+              id="switcher.streamServers.0.streamServer.publisher"
               {...register("switcher.streamServers.0.streamServer.publisher", {
                 required: true,
               })}

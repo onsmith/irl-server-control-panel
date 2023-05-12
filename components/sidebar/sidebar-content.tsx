@@ -1,10 +1,8 @@
 import Link from "next/link";
 import Sidebar from "./sidebar";
 
-import { BiWindows } from "react-icons/bi";
-import { BsChatDots, BsFileEarmarkText } from "react-icons/bs";
-import { FaRobot } from "react-icons/fa";
-import { GoSettings } from "react-icons/go";
+import { BiHome, BiWindows } from "react-icons/bi";
+import { BsChatDots, BsShieldLock } from "react-icons/bs";
 import { MdSwapHoriz } from "react-icons/md";
 
 const SidebarContent = function (): JSX.Element {
@@ -12,6 +10,9 @@ const SidebarContent = function (): JSX.Element {
     <Sidebar>
       <Sidebar.Items>
         <Sidebar.ItemGroup>
+          <Sidebar.Item href="/" as={Link} icon={BiHome}>
+            Server Status
+          </Sidebar.Item>
           <Sidebar.Item href="/obs-scenes" as={Link} icon={BiWindows}>
             OBS Scenes
           </Sidebar.Item>
@@ -21,14 +22,8 @@ const SidebarContent = function (): JSX.Element {
           <Sidebar.Item href="/chat-commands" as={Link} icon={BsChatDots}>
             Chat Commands
           </Sidebar.Item>
-          <Sidebar.Item href="/twitch-bot" as={Link} icon={FaRobot}>
-            Twitch Bot
-          </Sidebar.Item>
-          <Sidebar.Item href="/advanced" as={Link} icon={GoSettings}>
-            Advanced
-          </Sidebar.Item>
-          <Sidebar.Item href="/server-log" as={Link} icon={BsFileEarmarkText}>
-            Server Log
+          <Sidebar.Item href="/security" as={Link} icon={BsShieldLock}>
+            Security
           </Sidebar.Item>
         </Sidebar.ItemGroup>
       </Sidebar.Items>

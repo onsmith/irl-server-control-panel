@@ -27,7 +27,7 @@ export default {
           statsUrl: "http://srt-relay:8080/stats",
           publisher: "publisher/stream/PASTE_INGEST_KEY_HERE",
         },
-        name: "SLS",
+        name: "stream",
         priority: 0,
         overrideScenes: null,
         enabled: true,

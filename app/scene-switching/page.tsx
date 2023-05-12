@@ -179,7 +179,7 @@ export default function SceneSwitchingPage(): JSX.Element {
                 required: true,
               })}
               type="input"
-              placeholder="live"
+              placeholder="required"
               color={inputStatusColor(
                 errors,
                 "switcher.switchingScenes.normal"
@@ -189,16 +189,14 @@ export default function SceneSwitchingPage(): JSX.Element {
               errors={errors}
               name="switcher.switchingScenes.normal"
             >
-              Name of the "good connection" scene, to be shown if the connection
-              to the encoder is good
+              Name of the OBS scene to be shown if the connection to the encoder
+              is good
             </InputHelpText>
           </div>
 
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="switcher.triggers.low">
-                Minimum bitrate
-              </Label>
+              <Label htmlFor="switcher.triggers.low">Minimum bitrate</Label>
             </div>
             <TextInput
               id="switcher.triggers.low"
@@ -212,15 +210,13 @@ export default function SceneSwitchingPage(): JSX.Element {
             />
             <InputHelpText errors={errors} name="switcher.triggers.low">
               If the bitrate of the connection to the encoder is below this
-              value in kbps, OBS will be switched out of this scene
+              value in kbps, OBS will switch to the weak connection scene
             </InputHelpText>
           </div>
 
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="switcher.triggers.rtt">
-                Minimum latency
-              </Label>
+              <Label htmlFor="switcher.triggers.rtt">Minimum latency</Label>
             </div>
             <TextInput
               id="switcher.triggers.rtt"
@@ -234,7 +230,7 @@ export default function SceneSwitchingPage(): JSX.Element {
             />
             <InputHelpText errors={errors} name="switcher.triggers.rtt">
               If the latency (round-trip time) to the encoder exceeds this value
-              in milliseconds, OBS will be switched out of this scene
+              in milliseconds, OBS will switch to the weak connection scene
             </InputHelpText>
           </div>
         </div>
@@ -243,7 +239,7 @@ export default function SceneSwitchingPage(): JSX.Element {
       <section className="pt-6">
         <header>
           <h2 className="mb-3 text-2xl font-bold dark:text-white">
-            Low connection
+            Weak connection
           </h2>
         </header>
 
@@ -260,20 +256,18 @@ export default function SceneSwitchingPage(): JSX.Element {
                 required: true,
               })}
               type="input"
-              placeholder="low"
+              placeholder="required"
               color={inputStatusColor(errors, "switcher.switchingScenes.low")}
             />
             <InputHelpText errors={errors} name="switcher.switchingScenes.low">
-              Name of the "low connection" scene, to be shown if the connection
-              to the encoder is weak
+              Name of the OBS scene to be shown if the connection to the encoder
+              is weak
             </InputHelpText>
           </div>
 
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="switcher.triggers.offline">
-                Minimum bitrate
-              </Label>
+              <Label htmlFor="switcher.triggers.offline">Minimum bitrate</Label>
             </div>
 
             <TextInput
@@ -288,7 +282,7 @@ export default function SceneSwitchingPage(): JSX.Element {
             />
             <InputHelpText errors={errors} name="switcher.triggers.offline">
               If the bitrate of the connection to the encoder is below this
-              value in kbps, OBS will be switched out of this scene
+              value in kbps, OBS will be switched to the disconnected scene
             </InputHelpText>
           </div>
 
@@ -310,7 +304,7 @@ export default function SceneSwitchingPage(): JSX.Element {
             />
             <InputHelpText errors={errors} name="switcher.triggers.rtt_offline">
               If the latency (round-trip time) to the encoder exceeds this value
-              in milliseconds, OBS will be switched out of this scene
+              in milliseconds, OBS will be switched to the disconnected scene
             </InputHelpText>
           </div>
         </div>
@@ -336,7 +330,7 @@ export default function SceneSwitchingPage(): JSX.Element {
                 required: true,
               })}
               type="input"
-              placeholder="disconnected"
+              placeholder="required"
               color={inputStatusColor(
                 errors,
                 "switcher.switchingScenes.offline"
@@ -346,8 +340,8 @@ export default function SceneSwitchingPage(): JSX.Element {
               errors={errors}
               name="switcher.switchingScenes.offline"
             >
-              Name of the "disconnected" scene, to be shown if the connection to
-              the encoder drops
+              Name of the scene to be shown if the connection to the encoder
+              drops
             </InputHelpText>
           </div>
 
