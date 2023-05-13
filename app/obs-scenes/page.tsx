@@ -16,8 +16,8 @@ export default function ObsScenesPage(): JSX.Element {
     reset,
   } = useForm();
 
-  // user state for form
-  const [config, setConfig] = useState(null);
+  // Initial form data
+  const [formData, setFormData] = useState(null);
 
   // Fetch config object from server on component load
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function ObsScenesPage(): JSX.Element {
       method: "GET",
     }).then((response) => {
       if (isLoaded) {
-        setConfig(response.data);
+        setFormData(response.data);
       }
     });
     return () => {
@@ -37,20 +37,20 @@ export default function ObsScenesPage(): JSX.Element {
 
   // Reset form when config object is updated
   useEffect(() => {
-    reset(config!, { keepDirty: false });
-  }, [config]);
+    reset(formData!, { keepDirty: false });
+  }, [formData]);
 
   const updateConfig = async (data: any) => {
     return axios({
       url: "/api/noalbs/config",
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       data: JSON.stringify(data),
     }).then((response) => {
       // TODO abort if component is unmounted
-      setConfig(response.data);
+      setFormData(response.data);
     });
   };
 

@@ -1,35 +1,19 @@
 import fs from "fs/promises";
 import { merge } from "lodash";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import defaultConfig from "./default";
 
 const NOALBS_CONFIG_FILE = process.env.NOALBS_CONFIG_FILE!;
 const NOALBS_CONFIG_DIR = path.dirname(NOALBS_CONFIG_FILE);
 
-export default async function handler(
-  request: NextApiRequest,
-  response: NextApiResponse
-) {
-  if (request.method == "GET") {
-    await get_config(response);
-  } else if (request.method == "POST") {
-    await update_config(request, response);
-  } else {
-    response.status(405).json({ message: "Method not allowed" });
-  }
+export async function GET(_request: NextRequest) {
+  return NextResponse.json(await loadServerConfig());
 }
 
-async function get_config(response: NextApiResponse) {
-  response.status(200).json(await loadServerConfig());
-}
-
-async function update_config(
-  request: NextApiRequest,
-  response: NextApiResponse
-) {
+export async function PUT(request: NextRequest) {
   // Load the config specified in the request body
-  const requestConfig = request.body;
+  const requestConfig = await request.json();
   // TODO validate
 
   // Load the config that exists on the server, or the default if none exists
@@ -49,7 +33,7 @@ async function update_config(
   await fs.writeFile(NOALBS_CONFIG_FILE, JSON.stringify(mergedConfig));
 
   // Respond with the merged data
-  response.status(200).json(mergedConfig);
+  return NextResponse.json(mergedConfig);
 }
 
 async function loadServerConfig() {

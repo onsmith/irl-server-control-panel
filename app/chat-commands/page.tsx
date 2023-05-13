@@ -33,7 +33,8 @@ export default function ChatCommandsPage(): JSX.Element {
     formState: { errors, isSubmitting, isDirty, isSubmitSuccessful },
     reset,
   } = useForm(); // user state for form
-  const [config, setConfig] = useState(null);
+
+  const [formData, setFormData] = useState(null);
 
   // Fetch config object from server on component load
   useEffect(() => {
@@ -44,7 +45,7 @@ export default function ChatCommandsPage(): JSX.Element {
     }).then((response) => {
       if (isLoaded) {
         response.data.chat.admins = response.data.chat.admins.join(" ");
-        setConfig(response.data);
+        setFormData(response.data);
       }
     });
     return () => {
@@ -54,14 +55,14 @@ export default function ChatCommandsPage(): JSX.Element {
 
   // Reset form when config object is updated
   useEffect(() => {
-    reset(config!, { keepDirty: false });
-  }, [config]);
+    reset(formData!, { keepDirty: false });
+  }, [formData]);
 
   const updateConfig = async (data: any) => {
     data.chat.admins = data.chat.admins.trim().split(/\s+/);
     return axios({
       url: "/api/noalbs/config",
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -69,7 +70,7 @@ export default function ChatCommandsPage(): JSX.Element {
     }).then((response) => {
       // TODO abort if component is unmounted
       response.data.chat.admins = response.data.chat.admins.join(" ");
-      setConfig(response.data);
+      setFormData(response.data);
     });
   };
 

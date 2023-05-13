@@ -17,7 +17,7 @@ export default function TwitchAuthPage(): JSX.Element {
   } = useForm();
 
   // user state for form
-  const [env, setEnv] = useState(null);
+  const [formData, setFormData] = useState(null);
 
   // Fetch env object from server on component load
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function TwitchAuthPage(): JSX.Element {
       method: "GET",
     }).then((response) => {
       if (isLoaded) {
-        setEnv(response.data);
+        setFormData(response.data);
       }
     });
     return () => {
@@ -37,20 +37,20 @@ export default function TwitchAuthPage(): JSX.Element {
 
   // Reset form when env object is updated
   useEffect(() => {
-    reset(env!, { keepDirty: false });
-  }, [env]);
+    reset(formData!, { keepDirty: false });
+  }, [formData]);
 
   const updateEnv = async (data: any) => {
     return axios({
       url: "/api/noalbs/env",
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       data: JSON.stringify(data),
     }).then((response) => {
       // TODO abort if component is unmounted
-      setEnv(response.data);
+      setFormData(response.data);
     });
   };
 
