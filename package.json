@@ -1,5 +1,5 @@
 {
-  "name": "irl-server-control-panel",
+  "name": "irlss-webserver",
   "version": "1.0.0",
   "scripts": {
     "build": "next build",
