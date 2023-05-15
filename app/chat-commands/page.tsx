@@ -56,7 +56,7 @@ export default function ChatCommandsPage(): JSX.Element {
   // Reset form when config object is updated
   useEffect(() => {
     reset(formData!, { keepDirty: false });
-  }, [formData]);
+  }, [formData, reset]);
 
   const submitForm = async (data: any) => {
     data.chat.admins = data.chat.admins.trim().split(/\s+/);
@@ -115,7 +115,7 @@ export default function ChatCommandsPage(): JSX.Element {
             color={inputStatusColor(errors, "chat.username")}
           />
           <InputHelpText errors={errors} name="chat.username">
-            Username of the streamer's Twitch account
+            Username of the streamer&apos;s Twitch account
           </InputHelpText>
         </div>
 
@@ -133,7 +133,7 @@ export default function ChatCommandsPage(): JSX.Element {
           />
           <p className="text-gray-600 dark:text-gray-400 text-sm">
             Usernames of the Twitch accounts who should have full access to all
-            of the stream server's chat commands, separated by spaces
+            of the stream server&apos;s chat commands, separated by spaces
           </p>
         </div>
 

@@ -38,7 +38,7 @@ export default function ObsScenesPage(): JSX.Element {
   // Reset form when config object is updated
   useEffect(() => {
     reset(formData!, { keepDirty: false });
-  }, [formData]);
+  }, [formData, reset]);
 
   const submitForm = async (data: any) => {
     return axios({

@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 interface SidebarContextProps {
   isSmallScreen: boolean;
   isOpenOnSmallScreens: boolean;
-  setIsOpenOnSmallScreens: (isOpen: boolean) => void;
+  setIsOpenOnSmallScreens: (_isOpen: boolean) => void;
 }
 
 const SidebarContext = createContext<SidebarContextProps>(undefined!);

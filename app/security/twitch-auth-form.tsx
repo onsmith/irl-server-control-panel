@@ -38,7 +38,7 @@ export default function TwitchAuthPage(): JSX.Element {
   // Reset form when env object is updated
   useEffect(() => {
     reset(formData!, { keepDirty: false });
-  }, [formData]);
+  }, [formData, reset]);
 
   const submitForm = async (data: any) => {
     return axios({

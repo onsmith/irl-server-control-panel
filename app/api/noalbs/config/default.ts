@@ -6,7 +6,7 @@ export default {
   },
   switcher: {
     bitrateSwitcherEnabled: true,
-    onlySwitchWhenStreaming: true,
+    onlySwitchWhenStreaming: false,
     instantlySwitchOnRecover: true,
     autoSwitchNotification: false,
     retryAttempts: 5,
@@ -25,11 +25,12 @@ export default {
         streamServer: {
           type: "SrtLiveServer",
           statsUrl: "http://srt-relay:8080/stats",
-          publisher: "publisher/stream/PASTE_INGEST_KEY_HERE",
+          publisher: "publisher/stream/REPLACE_WITH_INGEST_KEY",
         },
-        name: "stream",
+        name: "IRL Video Feed",
         priority: 0,
         overrideScenes: null,
+        dependsOn: null,
         enabled: true,
       },
     ],
@@ -42,7 +43,7 @@ export default {
   },
   chat: {
     platform: "Twitch",
-    username: "",
+    username: "REPLACE_WITH_TWITCH_USERNAME",
     admins: [],
     prefix: "!",
     enablePublicCommands: false,
