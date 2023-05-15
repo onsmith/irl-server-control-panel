@@ -1,21 +1,11 @@
 "use client";
 
-import { Alert, Badge, Button, Spinner, Table } from "flowbite-react";
+import { Alert, Spinner } from "flowbite-react";
 import { HiExclamationCircle } from "react-icons/hi";
 import useSWR from "swr";
 import fetcher from "../fetcher";
-
-const statusColorMap: Record<string, string> = {
-  paused: "warning",
-  restarting: "warning",
-  removing: "failure",
-  running: "success",
-  dead: "failure",
-  created: "default",
-  exited: "failure",
-  unknown: "gray",
-  offline: "failure",
-};
+import ServiceRestartModal from "./service-restart-modal";
+import ServiceStatusTable from "./service-status-table";
 
 export default function ServerStatusTable(): JSX.Element {
   // Table data
@@ -31,8 +21,13 @@ export default function ServerStatusTable(): JSX.Element {
     return (
       <>
         {data.message && <Error message={data.message} />}
+
+        <div className="mt-4 mb-4">
+          <ServiceRestartModal />
+        </div>
+
         {data.services.length > 0 && (
-          <ContainerStatusTable services={data.services} />
+          <ServiceStatusTable services={data.services} />
         )}
       </>
     );
@@ -53,54 +48,5 @@ function Error({ message }: ErrorProps) {
       <p className="font-medium">Error: Could not query server status</p>
       {message && <p className="mt-1">{message}</p>}
     </Alert>
-  );
-}
-
-interface ServiceProps {
-  id: string;
-  name: string;
-  state: string;
-  status: string;
-}
-
-interface ContainerStatusTableProps {
-  services: ServiceProps[];
-}
-
-function ContainerStatusTable({ services }: ContainerStatusTableProps) {
-  return (
-    <Table>
-      <Table.Head>
-        <Table.HeadCell>Service</Table.HeadCell>
-        <Table.HeadCell>State</Table.HeadCell>
-        <Table.HeadCell>Status</Table.HeadCell>
-        <Table.HeadCell>Action</Table.HeadCell>
-      </Table.Head>
-
-      <Table.Body className="divide-y">
-        {services.map((service: ServiceProps) => (
-          <Table.Row key={service.id}>
-            <Table.Cell>
-              <code>{service.name}</code>
-            </Table.Cell>
-            <Table.Cell>
-              <div>
-                <Badge
-                  size="sm"
-                  style={{ display: "inline" }}
-                  color={statusColorMap[service.state] || "default"}
-                >
-                  {service.state}
-                </Badge>
-              </div>
-            </Table.Cell>
-            <Table.Cell>{service.status}</Table.Cell>
-            <Table.Cell>
-              <Button>Restart</Button>
-            </Table.Cell>
-          </Table.Row>
-        ))}
-      </Table.Body>
-    </Table>
   );
 }

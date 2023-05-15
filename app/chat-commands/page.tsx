@@ -58,7 +58,7 @@ export default function ChatCommandsPage(): JSX.Element {
     reset(formData!, { keepDirty: false });
   }, [formData]);
 
-  const updateConfig = async (data: any) => {
+  const submitForm = async (data: any) => {
     data.chat.admins = data.chat.admins.trim().split(/\s+/);
     return axios({
       url: "/api/noalbs/config",
@@ -82,10 +82,7 @@ export default function ChatCommandsPage(): JSX.Element {
         </h1>
       </header>
 
-      <form
-        className="flex flex-col gap-4"
-        onSubmit={handleSubmit(updateConfig)}
-      >
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit(submitForm)}>
         <div>
           <div className="mb-2 block">
             <Label htmlFor="language">

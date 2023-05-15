@@ -40,7 +40,7 @@ export default function TwitchBotPage(): JSX.Element {
     reset(formData!, { keepDirty: false });
   }, [formData]);
 
-  const updateConfig = async (data: any) => {
+  const submitForm = async (data: any) => {
     return axios({
       url: "/api/noalbs/config",
       method: "PUT",
@@ -55,7 +55,7 @@ export default function TwitchBotPage(): JSX.Element {
   };
 
   return (
-    <form onSubmit={handleSubmit(updateConfig)} className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit(submitForm)} className="flex flex-col gap-4">
       <div>
         <div className="mb-2 block">
           <Label htmlFor="switcher.streamServers.0.streamServer.publisher">

@@ -40,7 +40,7 @@ export default function SceneSwitchingPage(): JSX.Element {
     reset(formData!, { keepDirty: false });
   }, [formData]);
 
-  const updateConfig = async (data: any) => {
+  const submitForm = async (data: any) => {
     return axios({
       url: "/api/noalbs/config",
       method: "PUT",
@@ -55,7 +55,7 @@ export default function SceneSwitchingPage(): JSX.Element {
   };
 
   return (
-    <form onSubmit={handleSubmit(updateConfig)}>
+    <form onSubmit={handleSubmit(submitForm)}>
       <section>
         <header>
           <h2 className="mb-6 text-4xl font-bold dark:text-white">

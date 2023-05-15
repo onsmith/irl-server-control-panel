@@ -40,7 +40,7 @@ export default function ObsScenesPage(): JSX.Element {
     reset(formData!, { keepDirty: false });
   }, [formData]);
 
-  const updateConfig = async (data: any) => {
+  const submitForm = async (data: any) => {
     return axios({
       url: "/api/noalbs/config",
       method: "PUT",
@@ -57,15 +57,10 @@ export default function ObsScenesPage(): JSX.Element {
   return (
     <section>
       <header>
-        <h1 className="mb-6 text-4xl font-bold dark:text-white">
-          OBS Scenes
-        </h1>
+        <h1 className="mb-6 text-4xl font-bold dark:text-white">OBS Scenes</h1>
       </header>
 
-      <form
-        className="flex flex-col gap-4"
-        onSubmit={handleSubmit(updateConfig)}
-      >
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit(submitForm)}>
         <div>
           <div className="mb-2 block">
             <Label htmlFor="switcher.switchingScenes.normal">

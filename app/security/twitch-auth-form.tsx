@@ -40,7 +40,7 @@ export default function TwitchAuthPage(): JSX.Element {
     reset(formData!, { keepDirty: false });
   }, [formData]);
 
-  const updateEnv = async (data: any) => {
+  const submitForm = async (data: any) => {
     return axios({
       url: "/api/noalbs/env",
       method: "PUT",
@@ -55,7 +55,7 @@ export default function TwitchAuthPage(): JSX.Element {
   };
 
   return (
-    <form onSubmit={handleSubmit(updateEnv)} className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit(submitForm)} className="flex flex-col gap-4">
       <div>
         <div className="mb-2 block">
           <Label htmlFor="TWITCH_BOT_USERNAME">
